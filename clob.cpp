@@ -70,7 +70,7 @@ buy_order generate_new_buy()
 {
     time_t timestamp;
     time(&timestamp);
-    buy_order order{rand()%50+50, rand()%1000+1000, timestamp};
+    buy_order order{rand()%100+100, rand()%1000+1000, timestamp};
     return order;
 }
 
@@ -78,7 +78,7 @@ sell_order generate_new_sell()
 {
     time_t timestamp;
     time(&timestamp);
-    sell_order order{rand()%50+50, rand()%100+1000, timestamp};
+    sell_order order{rand()%100+100, rand()%100+1000, timestamp};
     return order;
 }
 
@@ -90,7 +90,7 @@ match generate_new_match(buy_order b, sell_order s)
     return order;
 };
 
-void print_clob_table (vector<buy_order>& orders_buy, vector<sell_order>& orders_sell, vector<match>& matches)
+void print_clob_table (vector<buy_order>& orders_buy, vector<sell_order>& orders_sell, vector<match>& matches, int spread)
 {
     struct
     {
@@ -139,10 +139,11 @@ void print_clob_table (vector<buy_order>& orders_buy, vector<sell_order>& orders
 
     clearScreen();
     cout << MAGENTA << "\n\t\t\t\tCLOB\n" << RESET << endl;
-    cout << GREEN << "  BUY ORDERS\t\t" << RESET << RED << " SELL ORDERS\t\t " << RESET << BLUE << "LATEST MATCHES\n" << RESET << GREEN << "Shares\tPrice\t\t" << RESET << RED << "Shares\tPrice\t\t" << RESET << BLUE << "Price\tDate/Time" << RESET <<endl;
+    cout << GREEN << "  BUY ORDERS\t\t" << RESET << RED << " SELL ORDERS\t\t " << RESET << BLUE << "LATEST MATCHES\n" << RESET << GREEN << "Shares\tPrice\t\t" << RESET << RED << "Shares\tPrice\t\t" << RESET << BLUE << "Price Asked\tPrice Bought\tDate/Time" << RESET <<endl;
     while (!cpq_buy.empty() && !cpq_sell.empty() && i<=20)
     {
-        if(cpq_buy.top().bid == cpq_sell.top().ask)
+        int difference = (cpq_buy.top().bid - cpq_sell.top().ask);
+        if( difference <= 2 && difference >= 0)
         {
             match m = generate_new_match(cpq_buy.top(), cpq_sell.top());
             matches.push_back(m);
@@ -168,7 +169,7 @@ void print_clob_table (vector<buy_order>& orders_buy, vector<sell_order>& orders
         }
         else
         {
-            cout << GREEN << cpq_buy.top().size << "\t" << cpq_buy.top().bid << RESET << RED << "\t\t" << cpq_sell.top().size << "\t" << cpq_sell.top().ask << RESET << BLUE << "\t\t" << cpq_match.top().buy.bid << "\t" << ctime(&cpq_match.top().time) << RESET;
+            cout << GREEN << cpq_buy.top().size << "\t" << cpq_buy.top().bid << RESET << RED << "\t\t" << cpq_sell.top().size << "\t" << cpq_sell.top().ask << RESET << BLUE << "\t\t" << cpq_match.top().sell.ask << "\t\t" << cpq_match.top().buy.bid << "\t\t" << ctime(&cpq_match.top().time) << RESET;
             cpq_match.pop();
         }
         cpq_buy.pop();
@@ -188,9 +189,11 @@ int main()
 
     bool running = true;
 
+    int spread = 5;
+
     while (running)
     {
-        print_clob_table(orders_buy, orders_sell, matches);
+        print_clob_table(orders_buy, orders_sell, matches, spread);
         orders_buy.push_back(generate_new_buy());
         orders_sell.push_back(generate_new_sell());
 
