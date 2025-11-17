@@ -59,11 +59,8 @@ struct match
 };
 
 void clearScreen() {
-#ifdef _WIN32 // Check if compiling on Windows
-    system("cls");
-#else // Assume Unix-based system
-    system("clear");
-#endif
+    cout << "\033[H";
+    cout << "\033[J";
 }
 
 buy_order generate_new_buy()
