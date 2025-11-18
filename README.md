@@ -10,7 +10,7 @@ On this challenge, you're implementing a Continuos Limit Order Book (CLOB). Buye
 
 ## How to build and run
 
-_ADD YOUR INSTRUCTIONS HERE_
+To get the code running you first have to build and compile it with the compiler of your choice, you must compile the "clob.cpp" file while also having the "clob.h" file in the same folder/directory. When you do that you can finally execute the given program by the compiler, it may be "clob.exe", "a.exe" or another variation depending on the instructions given and which compiler you use.
 
 
 ## Deliverables
