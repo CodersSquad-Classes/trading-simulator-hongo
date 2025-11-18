@@ -31,9 +31,10 @@ struct buy_order
         return bid < other.bid;
     }
     //Overloading the == for the remove to work
-    bool operator==(const buy_order& other) const {
-    return bid == other.bid && size == other.size && time == other.time;
-}
+    bool operator==(const buy_order& other) const 
+    {
+        return bid == other.bid && size == other.size && time == other.time;
+    }
 };
 
 struct sell_order 
@@ -48,9 +49,10 @@ struct sell_order
         return ask < other.ask;
     }
     //Overloading the == for the remove to work
-    bool operator==(const sell_order& other) const {
-    return ask == other.ask && size == other.size && time == other.time;
-}
+    bool operator==(const sell_order& other) const 
+    {
+        return ask == other.ask && size == other.size && time == other.time;
+    }
 };
 
 struct match

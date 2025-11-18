@@ -24,3 +24,55 @@ The CLOB operates on a price-time priority basis, this means that orders are fir
 By providing real-time information on the supply and demand dynamics of a security, the CLOB can also help traders and investors make informed desicions about their trading strategies. 
 
 The CLOB is a fundamental component of modern financial markets, providing a transparent and efficient platformfor the execution of trades. By understanding the working of the CLOB, and make more informed trading desicions.
+
+## Software Designed and Implementation
+
+I designed the software by parts, and designing the base of the code first then focusing on the actual functionality and visual design of it. I first started to implement the structures of the orders, then I overloaded some operators to get the priority queues working with the structures. 
+
+After that I finally started to try to make out the display of the CLOB, at first I started testing with printing the first structure of orders, then all of them, I implemented a while function to print all of the queue (up to 20 rows). Then inside the while function I implemented an if statement to make sure the proper orders into the mathcing orders structure and vector.
+
+Finally I implemented the more visual elements, like using identation to make it seem like a table, implementing the different colors, aswell as making it auto update.
+
+### Code Functions and elements
+
+#### Color codes
+
+These are the colors I used for the different tables in the terminal:
+
+- Red
+- Green
+- Cyan
+- Magenta
+- Reset (Not a color but also defined here, it resets the color to the original)
+
+#### struct buy_order
+
+This is the structure used for all buy orders, these are the elements used in said structure:
+
+- Bid: 
+    - An integer to store the price willing to pay for.
+- Size: 
+    - An integer to store how many shares there are in the order.
+- Time: 
+    - A "time_t" variable that will be used to store the time the order was placed.
+- bool operator<(const buy_order& other) const:
+    - Overloads the "<" operator to make sure the priority queues work with the structure.
+- bool operator==(const buy_order& other) const:
+    - Overloads the "==" to make sure the future function "remove" works well for future implementations.
+
+#### struct sell_order
+
+This is the structure used for all sell orders, these are the elements used in said structure:
+
+- Ask: 
+    - An integer to store the price willing to get paid for.
+- Size: 
+    - An integer to store how many shares there are in the order.
+- Time: 
+    - A "time_t" variable that will be used to store the time the order was placed.
+- bool operator<(const buy_order& other) const:
+    - Overloads the "<" operator to make sure the priority queues work with the structure.
+- bool operator==(const buy_order& other) const:
+    - Overloads the "==" to make sure the future function "remove" works well for future implementations.
+
+#### struct match
