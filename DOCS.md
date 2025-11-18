@@ -164,41 +164,41 @@ The function enters a loop that prints up to 20 rows or terminates early if buy 
 
 Each iteration performs the following:
 
-####### 1. Match Evaluation
+1. Match Evaluation
 
-The function checks whether the best buy and best sell orders satisfy the matching rules:
+    The function checks whether the best buy and best sell orders satisfy the matching rules:
 
-- Compute  
-  `difference = cpq_buy.top().bid - cpq_sell.top().ask`
-  
-- A match occurs when:
-  - `difference <= spread`
-  - AND `difference >= 0`
+    - Compute  
+    `difference = cpq_buy.top().bid - cpq_sell.top().ask`
+    
+    - A match occurs when:
+    - `difference <= spread`
+    - AND `difference >= 0`
 
-If a match is found:
+    If a match is found:
 
-- `generate_new_match()` is called to create a match object.
-- The match is added to the `matches` vector.
-- The corresponding buy and sell orders are removed from:
-  - `orders_buy`
-  - `orders_sell`
-  - Both priority queues
-- A line is printed showing `"MATCH FOUND"` in cyan.
-- The loop iteration is skipped using `continue`.
+    - `generate_new_match()` is called to create a match object.
+    - The match is added to the `matches` vector.
+    - The corresponding buy and sell orders are removed from:
+    - `orders_buy`
+    - `orders_sell`
+    - Both priority queues
+    - A line is printed showing `"MATCH FOUND"` in cyan.
+    - The loop iteration is skipped using `continue`.
 
-####### 2. Normal Printing (No Match)
+2. Normal Printing (No Match)
 
-If no match occurred:
+    If no match occurred:
 
-- The function prints:
-  - Buy size and bid (green)
-  - Sell size and ask (red)
-  
-- If the match queue has entries:
-  - Prints the latest match:
-    - Sell ask price
-    - Buy bid price
-    - Match timestamp
+    - The function prints:
+    - Buy size and bid (green)
+    - Sell size and ask (red)
+    
+    - If the match queue has entries:
+    - Prints the latest match:
+        - Sell ask price
+        - Buy bid price
+        - Match timestamp
 
 After printing, the function pops one buy and one sell order from their priority queues.
 
