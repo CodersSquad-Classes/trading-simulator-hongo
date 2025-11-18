@@ -1,62 +1,4 @@
-#include <iostream>
-#include <queue>
-#include <ctime>
-#include <vector>
-#include <random>
-#include <algorithm>
-#include <unistd.h>
-#include <cstdlib>
 #include "clob.h"
-
-using namespace std;
-
-//Defining codes for colors
-#define RESET   "\033[0m"
-#define RED     "\033[31m"
-#define GREEN   "\033[32m"
-#define BLUE    "\033[34m"
-#define MAGENTA "\033[35m"
-
-struct buy_order 
-{
-    int bid;
-    int size;
-    time_t time;
-    
-    //Overloading the < operator for the priority queue to work
-    bool operator<(const buy_order& other) const 
-    {
-        return bid < other.bid;
-    }
-    //Overloading the == for the remove to work
-    bool operator==(const buy_order& other) const {
-    return bid == other.bid && size == other.size && time == other.time;
-}
-};
-
-struct sell_order 
-{
-    int ask;
-    int size;
-    time_t time;
-
-    //Overloading the < operator for the priority queue to work
-    bool operator<(const sell_order& other) const 
-    {
-        return ask < other.ask;
-    }
-    //Overloading the == for the remove to work
-    bool operator==(const sell_order& other) const {
-    return ask == other.ask && size == other.size && time == other.time;
-}
-};
-
-struct match
-{
-    buy_order buy;
-    sell_order sell;
-    time_t time;
-};
 
 void clearScreen() {
     cout << "\033[H";
@@ -67,7 +9,7 @@ buy_order generate_new_buy()
 {
     time_t timestamp;
     time(&timestamp);
-    buy_order order{rand()%100+100, rand()%1000+1000, timestamp};
+    buy_order order{rand()%500+1, rand()%1000+1000, timestamp};
     return order;
 }
 
@@ -75,7 +17,7 @@ sell_order generate_new_sell()
 {
     time_t timestamp;
     time(&timestamp);
-    sell_order order{rand()%100+100, rand()%100+1000, timestamp};
+    sell_order order{rand()%500+1, rand()%1000+1000, timestamp};
     return order;
 }
 
@@ -136,11 +78,11 @@ void print_clob_table (vector<buy_order>& orders_buy, vector<sell_order>& orders
 
     clearScreen();
     cout << MAGENTA << "\n\t\t\t\tCLOB\n" << RESET << endl;
-    cout << GREEN << "  BUY ORDERS\t\t" << RESET << RED << " SELL ORDERS\t\t " << RESET << BLUE << "LATEST MATCHES\n" << RESET << GREEN << "Shares\tPrice\t\t" << RESET << RED << "Shares\tPrice\t\t" << RESET << BLUE << "Price Asked\tPrice Bought\tDate/Time" << RESET <<endl;
+    cout << GREEN << "  BUY ORDERS\t\t" << RESET << RED << " SELL ORDERS\t\t " << RESET << CYAN << "LATEST MATCHES\n" << RESET << GREEN << "Shares\tPrice\t\t" << RESET << RED << "Shares\tPrice\t\t" << RESET << CYAN << "Price Asked\tPrice Bought\tDate/Time" << RESET <<endl;
     while (!cpq_buy.empty() && !cpq_sell.empty() && i<=20)
     {
         int difference = (cpq_buy.top().bid - cpq_sell.top().ask);
-        if( difference <= 2 && difference >= 0)
+        if( difference <= spread && difference >= 0)
         {
             match m = generate_new_match(cpq_buy.top(), cpq_sell.top());
             matches.push_back(m);
@@ -148,7 +90,7 @@ void print_clob_table (vector<buy_order>& orders_buy, vector<sell_order>& orders
                 matches.begin(), matches.end(), customMatch
             );
 
-            cout << GREEN << cpq_buy.top().size << "\t" << cpq_buy.top().bid << RESET << RED << "\t\t" << cpq_sell.top().size << "\t" << cpq_sell.top().ask << RESET << BLUE << "\t\t MATCH FOUND" << RESET;
+            cout << GREEN << cpq_buy.top().size << "\t" << cpq_buy.top().bid << RESET << RED << "\t\t" << cpq_sell.top().size << "\t" << cpq_sell.top().ask << RESET << CYAN << "\t\t MATCH FOUND" << RESET;
 
             auto newEnd_buy = remove(orders_buy.begin(), orders_buy.end(), cpq_buy.top());
             orders_buy.erase(newEnd_buy, orders_buy.end());
@@ -166,7 +108,7 @@ void print_clob_table (vector<buy_order>& orders_buy, vector<sell_order>& orders
         }
         else
         {
-            cout << GREEN << cpq_buy.top().size << "\t" << cpq_buy.top().bid << RESET << RED << "\t\t" << cpq_sell.top().size << "\t" << cpq_sell.top().ask << RESET << BLUE << "\t\t" << cpq_match.top().sell.ask << "\t\t" << cpq_match.top().buy.bid << "\t\t" << ctime(&cpq_match.top().time) << RESET;
+            cout << GREEN << cpq_buy.top().size << "\t" << cpq_buy.top().bid << RESET << RED << "\t\t" << cpq_sell.top().size << "\t" << cpq_sell.top().ask << RESET << CYAN << "\t\t" << cpq_match.top().sell.ask << "\t\t" << cpq_match.top().buy.bid << "\t\t" << ctime(&cpq_match.top().time) << RESET;
             cpq_match.pop();
         }
         cpq_buy.pop();
@@ -186,7 +128,7 @@ int main()
 
     bool running = true;
 
-    int spread = 5;
+    int spread = 10;
 
     while (running)
     {
@@ -194,7 +136,7 @@ int main()
         orders_buy.push_back(generate_new_buy());
         orders_sell.push_back(generate_new_sell());
 
-        if (orders_buy.size() >= 100)
+        if (orders_buy.size() >= 1000)
         {
             running = false;
         }
