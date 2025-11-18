@@ -211,3 +211,13 @@ The loop ends if:
 - Either priority queue becomes empty.
 
 This function ties together the display and the operational logic of the CLOB, ensuring that both the most recent state of the order book and the latest transaction matches are clearly presented each time it is called.
+
+## Conclusions and Learnings
+
+During this challenge I had the oportunity to learn the importance of the proper implementation of queues and priority queues in these order books, most importantly how essential it is to make the proper desicions and the right displays to assure the proper functionality of the CLOB.
+
+I also got the chance to practice overloading operators again, it has been long since I overloaded operators properly and it was pretty fun to figure out that this was actually very useful in this scenario.
+
+In the same boat I also learned a lot from the main focus of this challenge, the use of priority queues can be very varied and useful. The way priority queues can be used and customized is very helpful in a lot of ways, you can practically make anything a priority in any way, and the use in this challenge is a prove of that, thanks to this customization I could implement these with the use of unique structures.
+
+I learned a lot from this challenge and I'm sure that all of these learnings will certainly be useful in my future projects and career.
