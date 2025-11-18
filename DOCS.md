@@ -15,3 +15,12 @@ This was achieved thanks to the use of queues, specifically priority queues, to 
 
 ## Research on stocks exchange (CLOB)
 
+The CLOB is a very important component in the modern world of financial markets, it acts as the central hub for buyers and sellers to interact and finalize trades. The CLOB is responsible for mantaining an organized and trasnparent record of all open buy and sell orders for a particular security, this record is continously updated in real time, providing all participants with essential information about the supply and demand dynamics of the market.
+
+Each order in CLOB contains sepcific information, including the price at which the buyer or seller is willing to trade, the numberof shares they wish to trade, adn the time at wich the order was placed. This information is very important for traders and investors as it provides a clear picture of the market's current state and potential movements in the future.
+
+The CLOB operates on a price-time priority basis, this means that orders are first ranked according to their price, with the best bid and ask orders given the highest priority. If multiple orders have the same price, they are then ranked according to their longevity, with earlier orders given priority over later ones.
+
+By providing real-time information on the supply and demand dynamics of a security, the CLOB can also help traders and investors make informed desicions about their trading strategies. 
+
+The CLOB is a fundamental component of modern financial markets, providing a transparent and efficient platformfor the execution of trades. By understanding the working of the CLOB, and make more informed trading desicions.
