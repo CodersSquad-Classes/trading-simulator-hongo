@@ -45,6 +45,8 @@ These are the colors I used for the different tables in the terminal:
 - Magenta
 - Reset (Not a color but also defined here, it resets the color to the original)
 
+---
+
 #### struct buy_order
 
 This is the structure used for all buy orders, these are the elements used in said structure:
@@ -59,6 +61,8 @@ This is the structure used for all buy orders, these are the elements used in sa
     - Overloads the "<" operator to make sure the priority queues work with the structure.
 - bool operator==(const buy_order& other) const:
     - Overloads the "==" to make sure the future function "remove" works well for future implementations.
+
+---
 
 #### struct sell_order
 
@@ -75,4 +79,135 @@ This is the structure used for all sell orders, these are the elements used in s
 - bool operator==(const buy_order& other) const:
     - Overloads the "==" to make sure the future function "remove" works well for future implementations.
 
+---
+
 #### struct match
+
+This is a structure used for all matching orders, these are the elements used in said structure:
+
+- Buy:
+    - This stores a buy_order object that matched with a sell order.
+- Sell:
+    - This stores the previously sell_order stated that matched with the buy order.
+- Time:
+    - This stores a "time_t" variable that states at which time the match was made.
+
+---
+
+#### void clearScreen()
+
+This function clears the screen every time the CLOB updates, readying it for the next printing.
+
+---
+
+#### buy_order generate_new_buy()
+
+This function generates a new buy_order object with random values, adn the current timestamp, and returns it.
+
+---
+
+#### buy_order generate_new_sell()
+
+This function generates a new sell_order object with random values, adn the current timestamp, and returns it.
+
+---
+
+#### match generate_new_match(buy_order b, sell_order s)
+
+This function generates a new match object with the given buy_order and sell_order objects, and takes the current timestamp, and then returns the generated object.
+
+---
+
+#### void print_clob_table (vector<buy_order>& orders_buy, vector<sell_order>& orders_sell, vector<match>& matches, int spread)
+
+This function prints the entire Central Limit Order Book (CLOB) in a structured format, showing buy orders, sell orders, and the latest matches aligned side-by-side. It also executes the matching logic whenever a buy and sell order satisfy the spread condition.
+
+###### Priority Queues and Custom Comparators
+
+Inside the function, three custom comparators are defined to properly order the elements in the priority queues:
+
+- Buy Orders Comparator
+  - Orders buy orders so that:
+    - Higher bids appear first.
+    - If bids are equal, older orders (lower timestamp) appear first.
+  
+- Sell Orders Comparator
+  - Orders sell orders so that:
+    - Lower asks appear first.
+    - If asks are equal, older orders appear first.
+
+- Match Comparator
+  - Orders matches so that:
+    - Most recent matches appear first.
+
+These comparators initialize the following priority queues:
+- `cpq_buy`
+- `cpq_sell`
+- `cpq_match`
+
+###### Preparing the Display
+
+Before printing the CLOB:
+
+- `clearScreen()` is called to wipe the terminal so the updated book is printed cleanly.
+- The function prints:
+  - A magenta CLOB header
+  - Green section for buy orders
+  - Red section for sell orders
+  - Cyan section for match information
+
+The color codes ensure the table is visually easy to follow.
+
+###### Main Processing Loop
+
+The function enters a loop that prints up to 20 rows or terminates early if buy or sell queues empty.
+
+Each iteration performs the following:
+
+####### 1. Match Evaluation
+
+The function checks whether the best buy and best sell orders satisfy the matching rules:
+
+- Compute  
+  `difference = cpq_buy.top().bid - cpq_sell.top().ask`
+  
+- A match occurs when:
+  - `difference <= spread`
+  - AND `difference >= 0`
+
+If a match is found:
+
+- `generate_new_match()` is called to create a match object.
+- The match is added to the `matches` vector.
+- The corresponding buy and sell orders are removed from:
+  - `orders_buy`
+  - `orders_sell`
+  - Both priority queues
+- A line is printed showing `"MATCH FOUND"` in cyan.
+- The loop iteration is skipped using `continue`.
+
+####### 2. Normal Printing (No Match)
+
+If no match occurred:
+
+- The function prints:
+  - Buy size and bid (green)
+  - Sell size and ask (red)
+  
+- If the match queue has entries:
+  - Prints the latest match:
+    - Sell ask price
+    - Buy bid price
+    - Match timestamp
+
+After printing, the function pops one buy and one sell order from their priority queues.
+
+###### Iteration Control
+
+A counter ensures that no more than 20 rows of data are printed.  
+The loop ends if:
+
+- A match forces an early stop, or
+- Either priority queue becomes empty.
+
+This function ties together the display and the operational logic of the CLOB, ensuring that both the most recent state of the order book and the latest transaction matches are clearly presented each time it is called.
